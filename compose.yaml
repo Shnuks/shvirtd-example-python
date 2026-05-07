@@ -2,45 +2,37 @@ include:
   - proxy.yaml
 
 services:
-  db:
-    image: mysql:8
-    container_name: mysql-db
-    restart: on-failure
-    env_file:
-      - .env
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    networks:
-      backend:
-        ipv4_address: 172.20.0.10
-    volumes:
-      - db_data:/var/lib/mysql
-   
-
   web:
     build:
       context: .
       dockerfile: Dockerfile.python
-    container_name: fastapi-web
+    container_name: web
     restart: always
-    env_file:
-      - .env
+    networks:
+      backend:
+        ipv4_address: 172.20.0.5
     environment:
       DB_HOST: db
       DB_USER: ${MYSQL_USER}
       DB_PASS: ${MYSQL_PASSWORD}
       DB_NAME: ${MYSQL_DATABASE}
-      DB_PORT: 3306
     depends_on:
       - db
+
+  db:
+    image: mysql:8
+    container_name: db
+    restart: always
     networks:
       backend:
-        ipv4_address: 172.20.0.5
-    expose:
-      - "5000"
+        ipv4_address: 172.20.0.10
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
 
 volumes:
   db_data:
