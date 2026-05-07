@@ -1,0 +1,11 @@
+.git
+.gitignore
+README.md
+Dockerfile*
+.dockerignore
+venv/
+.env
+*.log
+node_modules/
+dist/
+build/
