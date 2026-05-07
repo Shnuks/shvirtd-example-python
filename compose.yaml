@@ -24,7 +24,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.python
-      
     container_name: fastapi-web
     restart: always
     env_file:
@@ -42,24 +41,6 @@ services:
         ipv4_address: 172.20.0.5
     expose:
       - "5000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-networks:
-  backend:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/24
 
 volumes:
   db_data:
-
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5000"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
